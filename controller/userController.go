@@ -7,6 +7,7 @@ import (
 	"com.nicklaus/ginpractice/util"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"log"
 	"net/http"
 )
 
@@ -79,11 +80,26 @@ func UserLogin(ctx *gin.Context) {
 		return
 	}
 	//登录成功，返回token
+	token, err := common.ReleaseToken(user)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": 500, "msg": "系统崩溃"})
+		log.Printf("generate token failed error: %v", err)
+		return
+	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"code": 200,
 		"msg":  "登录成功",
 		"data": gin.H{
-			"token": 9527,
+			"token": token,
 		},
+	})
+}
+
+func UserInfo(ctx *gin.Context) {
+	user, _ := ctx.Get("user")
+	ctx.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"data": gin.H{"user": user},
+		"msg":  "用户信息",
 	})
 }
