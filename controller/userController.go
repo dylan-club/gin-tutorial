@@ -16,9 +16,11 @@ import (
 func UserRegister(ctx *gin.Context) {
 	//获取参数
 	db := common.GetDB()
-	name := ctx.PostForm("name")
-	telephone := ctx.PostForm("telephone")
-	password := ctx.PostForm("password")
+	var registerUser model.User
+	_ = ctx.Bind(&registerUser)
+	name := registerUser.Name
+	telephone := registerUser.Telephone
+	password := registerUser.Password
 	//数据验证
 	if len(telephone) != 11 {
 		response.Response(ctx, http.StatusUnprocessableEntity, 422, gin.H{}, "手机号必须是11位")
@@ -58,8 +60,10 @@ func UserRegister(ctx *gin.Context) {
 func UserLogin(ctx *gin.Context) {
 	//获取数据
 	db := common.GetDB()
-	telephone := ctx.PostForm("telephone")
-	password := ctx.PostForm("password")
+	var loginUser model.User
+	_ = ctx.Bind(&loginUser)
+	telephone := loginUser.Telephone
+	password := loginUser.Password
 	//数据验证
 	if len(telephone) != 11 {
 		response.Response(ctx, http.StatusUnprocessableEntity, 422, gin.H{}, "手机号必须是11位")

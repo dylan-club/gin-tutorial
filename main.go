@@ -1,7 +1,6 @@
 package main
 
 import (
-	"com.nicklaus/ginpractice/common"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"os"
@@ -9,7 +8,6 @@ import (
 
 func main() {
 	InitConfig()
-	common.InitDB()
 	r := gin.Default()
 	r = CollectRoute(r)
 	port := viper.GetString("server.port")

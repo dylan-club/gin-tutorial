@@ -6,9 +6,13 @@ import (
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"sync"
 )
 
-var db *gorm.DB
+var (
+	once sync.Once
+	db   *gorm.DB
+)
 
 func InitDB() {
 	host := viper.GetString("datasource.host")
@@ -33,5 +37,6 @@ func InitDB() {
 }
 
 func GetDB() *gorm.DB {
+	once.Do(InitDB)
 	return db
 }
